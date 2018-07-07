@@ -169,6 +169,7 @@ void setup()
    Serial.println(state.theme_num);
 
    set_theme(themes[state.theme_num]);
+   Serial.println("ready to receive ir codes");
    ir_receiver.enableIRIn();
 }
 

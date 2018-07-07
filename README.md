@@ -16,15 +16,18 @@ The software has a set of themes that can be set at compile time. A theme consis
 
 [TSOP34838](https://www.vishay.com/docs/82489/tsop322.pdf) IR receiver is used to remotely control the selection of color theme and to set the overall brightness of the theme. The settings are written to EEPROM on Atmega328 microcontroller to persist the selection even when the power is off.
 
-Here is a prototype of the project, connected to a small breadboard
+Here is a prototype of the project using Arduino Nano, connected to a small breadboard
 
 ![Imgur](https://i.imgur.com/LPQrCSql.jpg)
+
+and here is second prototype using minimal ATmega328P configuration
+
+![Imgur](https://i.imgur.com/YPat3FHl.jpg)
 
 
 ## Schematic
 
-[![tv-led-strip by tero.saarni@gmail.com 4fbfcfbe96263ceb - Upverter](https://upverter.com/tero.saarni@gmail.com/4fbfcfbe96263ceb/tv-led-strip/embed_img/15308997390000/)](https://upverter.com/tero.saarni@gmail.com/4fbfcfbe96263ceb/tv-led-strip/#/)
-
+[![tv-led-strip by tero.saarni@gmail.com 4fbfcfbe96263ceb - Upverter](https://upverter.com/tero.saarni@gmail.com/4fbfcfbe96263ceb/tv-led-strip/embed_img/15309497480000/)](https://upverter.com/tero.saarni@gmail.com/4fbfcfbe96263ceb/tv-led-strip/#/)
 
 ## Dependencies
 
@@ -36,12 +39,32 @@ Following libraries are used:
 * [IRLib2](https://github.com/cyborg5/IRLib2) to receive remote control codes
 
 
-## Compiling
+## Compiling and testing on Arduino development board
 
-Execute following command to compile the program and upload it to the microcontroller:
 
-    platformio run
+Execute following command to compile the program and upload it to Arduino Nano:
+
+    platformio run -e nanoatmega328
 
 Execute following command to follow the debug logs:
 
     platformio serialports monitor -b 115200
+
+
+## Compiling for standalone ATmega328P
+
+This example uses USBasp programmer over ICSP (in-circuit serial programming).
+
+First check the connectivity by reading default fuse values from the microcontroller.  It should respond with `Fuses OK (E:FF, H:D9, L:62)`.
+
+    avrdude -patmega328p -c usbasp
+
+
+Next program the microcontroller to use external 16MHz oscillator:
+
+    avrdude -patmega328p -c usbasp -U lfuse:w:0xFF:m -U hfuse:w:0xDE:m -U efuse:w:0xFD:m
+
+
+Compile and flash the program by runnig command:
+
+    platformio run -e 328p16m
